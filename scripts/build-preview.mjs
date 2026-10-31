@@ -12,11 +12,12 @@ const out = process.argv[2] || join(ROOT, 'preview', 'poetsbeestje.html');
 const html = await readFile(join(ROOT, 'index.html'), 'utf8');
 const css = await readFile(join(ROOT, 'styles.css'), 'utf8');
 const items = await readFile(join(ROOT, 'data', 'items.js'), 'utf8');
+const species = await readFile(join(ROOT, 'data', 'species.js'), 'utf8');
 const app = await readFile(join(ROOT, 'app.js'), 'utf8');
 
 const body = html.split('<!-- BODY-START -->')[1]?.split('<!-- BODY-END -->')[0];
 if (!body) throw new Error('index.html mist de BODY-START / BODY-END markeringen');
-for (const [name, src] of [['items.js', items], ['app.js', app]]) {
+for (const [name, src] of [['items.js', items], ['species.js', species], ['app.js', app]]) {
   if (/<\/script/i.test(src)) throw new Error(name + ' bevat "</script>" en kan niet inline');
 }
 const fonts = html.match(/<link rel="stylesheet" href="(https:\/\/fonts\.googleapis\.com[^"]+)">/)?.[1];
@@ -29,6 +30,7 @@ const page = [
   body.trim(),
   '<script>window.PB_PREVIEW = true;</script>',
   `<script>\n${items}\n</script>`,
+  `<script>\n${species}\n</script>`,
   `<script>\n${app}\n</script>`
 ].join('\n');
 

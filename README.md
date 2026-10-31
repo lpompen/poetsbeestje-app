@@ -1,6 +1,6 @@
 # Poetsbeestje
 
-Poets-app voor kinderen, geïnspireerd op de Philips Sonicare For Kids-app. Je kind poetst twee minuten samen met een eigen beestje (standaard heet het **Bubbel**). De tijd is verdeeld in vier stukken van 30 seconden: boven links, boven rechts, onder rechts, onder links. Bij elk stuk verdwijnen de vlekjes van de tanden van het beestje. Na een volledige beurt krijgt je kind een cadeautje: iets nieuws om het beestje mee aan te kleden.
+Poets-app voor kinderen, geïnspireerd op de Philips Sonicare For Kids-app. Je kind kiest een ei, en na de eerste keer poetsen komt daar een eigen dier uit. Daarna poetst het elke ochtend en avond twee minuten mee. Wie de hele tijd poetst, krijgt een cadeautje om het dier aan te kleden, en mag daarna nog even met het dier spelen.
 
 **Live:** https://lpompen.github.io/poetsbeestje-app/
 
@@ -8,12 +8,16 @@ Het beestje, de kleding en de werelden zijn eigen tekeningen. Er zitten geen Phi
 
 ## Wat zit erin
 
-- **Poetstimer** met aftellen, vier kwadranten, geluidje en trilling bij elke wissel, pauze en stopknop. Het scherm blijft aan tijdens het poetsen (waar de telefoon dat toestaat).
-- **Cadeautje na elke volledige beurt.** Het eerste cadeau is altijd iets voor op het hoofd, zodat je kind meteen verschil ziet.
+- **Een ei kiezen:** eenhoorn, dino, pluisbol, poesje, konijntje of monstertje. Het ei krijgt barstjes tijdens de eerste poetsbeurt; daarna tikt je kind het open.
+- **Poetstimer** met aftellen, pauze en stopknop. Een grote mond met 16 tanden laat zien welke tand nu aan de beurt is: de tandenborstel schrobt er met schuim overheen en de tand wordt van geel glinsterend wit. Vier stukken: boven links, boven rechts, onder rechts, onder links, met een geluidje en trilling bij elke wissel. Het scherm blijft aan tijdens het poetsen (waar de telefoon dat toestaat).
+- **Eerst poetsen, dan spelen.** Aankleden, cadeautjes openen en spelen kan alleen na het poetsen.
+- **Speeltijd:** 's avonds 1 minuut, dan gaapt het dier en valt het in slaap. Op schooldagen 's ochtends 30 seconden, dan gaat het met een rugzak naar school (terug om 14:00). In het weekend geldt de avondtijd en gaat het buiten spelen. Ouders kunnen de tijden aanpassen.
+- **Aaien met je vinger:** omlaag aaien = knuffelen (hartjes), heen en weer kriebelen = kietelen (hihi), omhoog aaien (tegen de haren in) of te lang kietelen = boos (stoomwolkjes). Even tikken = boing. De oogjes volgen je vinger.
+- **Cadeautje na de eerste volledige beurt van elk dagdeel.** Het eerste avondcadeau is altijd de sterrenpyjama.
 - **Reeks-bonus:** 3 dagen op rij ochtend én avond gepoetst (en daarna elke 7 dagen) geeft een extra, zeldzaam cadeau.
-- **Kledingkast** met 50 spullen in 7 vakjes: hoofd, ogen, versiering, in de hand, voeten, kleur en wereld. Wat je nog niet hebt, zie je als silhouet.
+- **Kledingkast** met 60 spullen in 8 vakjes: hoofd, kleding (o.a. 4 pyjama's), ogen, versiering, in de hand, voeten, kleur en wereld. Wat je nog niet hebt, zie je als silhouet.
 - **Zeldzaamheid:** gewoon, zeldzaam en super zeldzaam. Zeldzame spullen komen vanaf beurt 3, super zeldzame vanaf beurt 8.
-- **Ouderscherm** achter een rekensom: overzicht van 14 dagen, namen, poetstijd (1, 2 of 3 minuten), geluid en trillen aan/uit, zelf een cadeautje klaarzetten, log bekijken en alles wissen.
+- **Ouderscherm** achter een rekensom: overzicht van 14 dagen, ander ei kiezen, namen, poetstijd (1, 2 of 3 minuten), speeltijd, geluid en trillen aan/uit, zelf een cadeautje klaarzetten, log bekijken en alles wissen.
 - **Werkt offline** en is als app op het beginscherm te zetten (PWA).
 - **Licht en donker thema**, volgt de instelling van de telefoon.
 
@@ -26,7 +30,8 @@ Alles wordt op het toestel zelf bewaard (localStorage). Er gaat niets naar een s
 | `index.html` | Alle schermen |
 | `app.js` | Spelregels, timer, schermen, opslag en log |
 | `styles.css` | Vormgeving |
-| `data/items.js` | Tekeningen van het beestje, de 50 spullen en de werelden |
+| `data/items.js` | Tekeningen van het lijf, de 60 spullen en de werelden |
+| `data/species.js` | De zes dieren en hun eieren |
 | `sw.js`, `manifest.webmanifest`, `icon.svg` | Offline werken en installeren op het beginscherm |
 | `server.js` | Kleine webserver voor lokaal draaien en Render, schrijft de logs |
 | `render.yaml` | Instellingen voor Render |
@@ -63,7 +68,7 @@ npx playwright install chromium
 npm test
 ```
 
-De test speelt in een paar seconden alles door: een volledige poetsbeurt, cadeautje openen en aantrekken, de kledingkast, het ouderscherm (goed en fout antwoord), stoppen halverwege, de reeks-bonus, donker thema en een klein scherm. Screenshots komen in `test-output/`.
+De test speelt in een paar seconden een hele week na: ei kiezen, de eerste poetsbeurt met de tanden-animatie, het ei openen, de pyjama, kietelen/knuffelen/boos maken, de kledingkast, gapen en slapen, weekend en schooldag, het ouderscherm, stoppen halverwege, de reeks-bonus, donker thema en een klein scherm (75 controles). Screenshots komen in `test-output/`.
 
 ## Spullen toevoegen
 
@@ -73,6 +78,6 @@ Open `data/items.js` en voeg een item toe aan het juiste lijstje, bijvoorbeeld:
 { id: 'h-zonnehoed', name: 'Zonnehoed', rarity: 'gewoon', front: '<ellipse cx="150" cy="100" rx="80" ry="14" fill="#FFD84D"/>' }
 ```
 
-Het tekenvlak is 300 × 340. Ogen staan op (118,165) en (182,165), de hand op (268,190), de voeten op y 308. Verhoog daarna `CACHE` in `sw.js`, anders zien telefoons de oude versie nog even.
+Het tekenvlak is 300 × 340. Ogen staan op (118,165) en (182,165), de hand op (268,190), de voeten op y 308. Kleding (`kleding`) gebruikt `torso` (wordt binnen het lijf geknipt, onder de hals), `sleeve` (mouwkleur) en `front`. Een nieuw dier voeg je toe in `data/species.js`. Verhoog daarna `CACHE` in `sw.js`, anders zien telefoons de oude versie nog even.
 
 Publiceren: zie [GITHUB-DEPLOY.md](GITHUB-DEPLOY.md).

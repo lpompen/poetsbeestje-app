@@ -83,7 +83,8 @@
 
   /* ---------- het beestje zelf ---------- */
   const BODY = 'M150 88 C215 88 258 140 258 205 C258 270 212 312 150 312 C88 312 42 270 42 205 C42 140 85 88 150 88Z';
-  const SMILE = 'M114 206 Q150 220 186 206 Q150 262 114 206Z';
+  const SMILE = 'M131 211 Q150 216 169 211 Q167 238 150 238 Q133 238 131 211Z';
+  const LAUGH = 'M122 206 Q150 214 178 206 Q174 250 150 250 Q126 250 122 206Z';
   const MOUTH_OPEN = { x: 96, y: 194, w: 108, h: 66, rx: 26 };
 
   const DEFS =
@@ -101,11 +102,15 @@
     '<radialGradient id="pb-glass" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".45"/><stop offset="1" stop-color="#BDEBFF" stop-opacity=".12"/></radialGradient>' +
     '<clipPath id="pb-body-clip"><path d="' + BODY + '"/></clipPath>' +
     '<clipPath id="pb-smile-clip"><path d="' + SMILE + '"/></clipPath>' +
+    '<clipPath id="pb-laugh-clip"><path d="' + LAUGH + '"/></clipPath>' +
     '<clipPath id="pb-mouth-clip"><rect x="' + MOUTH_OPEN.x + '" y="' + MOUTH_OPEN.y + '" width="' + MOUTH_OPEN.w + '" height="' + MOUTH_OPEN.h + '" rx="' + MOUTH_OPEN.rx + '"/></clipPath>';
 
   window.PB_ART = {
     BODY: BODY,
     SMILE: SMILE,
+    LAUGH: LAUGH,
+    TORSO: 'M26 236 Q150 268 274 236 L284 344 L16 344 Z',
+    NECKLINE: 'M34 238 Q150 270 266 238',
     MOUTH_OPEN: MOUTH_OPEN,
     HORN_L: 'M94 112 Q96 80 106 60 Q122 78 128 102 Z',
     HORN_R: 'M206 112 Q204 80 194 60 Q178 78 172 102 Z',
@@ -118,6 +123,7 @@
   /* ---------- vakjes in de kledingkast ---------- */
   window.PB_SLOTS = [
     { id: 'hoofd', name: 'Hoofd', removable: true, thumb: '55 0 190 125' },
+    { id: 'kleding', name: 'Kleding', removable: true },
     { id: 'ogen', name: 'Ogen', removable: true, thumb: '50 112 200 104' },
     { id: 'nek', name: 'Versiering', removable: true, thumb: '45 232 210 100' },
     { id: 'hand', name: 'In de hand', removable: true, thumb: '215 40 85 170' },
@@ -128,7 +134,8 @@
 
   /* ---------- kleuren voor het lijf ---------- */
   const kleuren = [
-    { id: 'k-mint', name: 'Muntgroen', rarity: 'gewoon', start: true, palette: { body: '#5EE0B5', shade: '#30B48B', belly: '#CBF7E7', horn: '#FFD166' } },
+    { id: 'k-natuur', name: 'Eigen kleur', rarity: 'gewoon', start: true, natural: true },
+    { id: 'k-mint', name: 'Muntgroen', rarity: 'gewoon', palette: { body: '#5EE0B5', shade: '#30B48B', belly: '#CBF7E7', horn: '#FFD166' } },
     { id: 'k-roze', name: 'Suikerspinroze', rarity: 'gewoon', palette: { body: '#FF8DC1', shade: '#E15E9C', belly: '#FFD8EB', horn: '#8FE3FF' } },
     { id: 'k-blauw', name: 'Oceaanblauw', rarity: 'gewoon', palette: { body: '#4FB3FF', shade: '#2B84D6', belly: '#CDEBFF', horn: '#FFD166' } },
     { id: 'k-paars', name: 'Druivenpaars', rarity: 'gewoon', palette: { body: '#A98BFF', shade: '#7C5BDF', belly: '#E5DBFF', horn: '#6EF0C8' } },
@@ -159,6 +166,11 @@
       '<path d="M150 52 L150 100" stroke="#2563D9" stroke-width="3" opacity=".6"/>' +
       '<circle cx="150" cy="51" r="7" fill="#FFC83A"/>' +
       '<path d="M114 74 Q124 60 140 58" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".35" fill="none"/>' },
+    { id: 'h-slaapmuts', name: 'Slaapmuts', rarity: 'gewoon', front:
+      '<path d="M98 108 Q98 58 150 50 Q208 46 238 98 Q246 118 230 122 Q216 86 192 80 Q202 96 204 108 Z" fill="#3D4FA8"/>' +
+      '<path d="' + star(132, 76, 6, 2.6) + '" fill="#FFE27A"/><path d="' + star(176, 66, 5, 2.2) + '" fill="#FFE27A"/><path d="' + star(214, 92, 4.5, 2) + '" fill="#FFE27A"/>' +
+      '<path d="M94 100 Q150 88 206 100 L208 114 Q150 102 92 114 Z" fill="#FFFFFF"/>' +
+      '<circle cx="232" cy="124" r="13" fill="#FFFFFF"/><circle cx="228" cy="120" r="4" fill="#E8F0FF"/>' },
     { id: 'h-feestmuts', name: 'Feestmuts', rarity: 'gewoon', front:
       '<g transform="rotate(-8 150 100)"><path d="M118 102 L150 20 L182 102 Z" fill="#FF4F8B"/>' +
       '<path d="M128.1 76 L171.9 76 L177.3 90 L122.7 90Z" fill="#FFC83A"/><path d="M139.1 48 L160.9 48 L164.8 58 L135.2 58Z" fill="#3FD0EE"/>' +
@@ -337,6 +349,61 @@
     }) }
   ].map(function (i) { i.slot = 'voeten'; return i; });
 
+  /* ---------- kleding (pyjama's en meer) ----------
+     torso: tekening op de buik, wordt binnen het lijf geknipt (onder de hals)
+     sleeve: kleur van de mouwen (leeg = blote armpjes)
+     front: extra's die erbovenop komen (knoopjes, rokje)               */
+  function cloud(x, y, s) {
+    return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')" fill="#FFFFFF"><circle cx="-10" cy="2" r="9"/><circle cx="2" cy="-4" r="12"/><circle cx="14" cy="3" r="8"/><rect x="-18" y="2" width="38" height="10" rx="5"/></g>';
+  }
+  function moon(x, y, r, color, bg) {
+    return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + color + '"/><circle cx="' + (x + r * 0.45) + '" cy="' + (y - r * 0.3) + '" r="' + (r * 0.85) + '" fill="' + bg + '"/>';
+  }
+  function buttons(color) {
+    return '<g fill="' + color + '"><circle cx="150" cy="270" r="4.5"/><circle cx="150" cy="290" r="4.5"/><circle cx="150" cy="310" r="4.5"/></g>';
+  }
+  let stripes = '';
+  for (let x = 30; x < 280; x += 24) stripes += '<rect x="' + x + '" y="230" width="11" height="120" fill="#FF9CC2"/>';
+  let rainbowBands = '<rect x="0" y="230" width="300" height="40" fill="#FF6B8B"/><rect x="0" y="270" width="300" height="16" fill="#FFB347"/><rect x="0" y="286" width="300" height="16" fill="#FFE45C"/><rect x="0" y="302" width="300" height="16" fill="#5EE0B5"/><rect x="0" y="318" width="300" height="30" fill="#4FB3FF"/>';
+
+  const kleding = [
+    { id: 'kl-sterren', name: 'Sterrenpyjama', rarity: 'gewoon', sleeve: '#3D4FA8', trim: '#FFFFFF',
+      torso: '<path d="' + 'M26 236 Q150 268 274 236 L284 344 L16 344 Z' + '" fill="#3D4FA8"/>' +
+        ['M90 282', 'M118 318', 'M196 300', 'M230 272', 'M70 312', 'M176 330'].map(function (m, i) {
+          const xy = m.slice(1).split(' ').map(Number);
+          return '<path d="' + star(xy[0], xy[1], 7 - (i % 2) * 2, 3 - (i % 2)) + '" fill="#FFE27A"/>';
+        }).join('') + moon(204, 268, 10, '#FFE27A', '#3D4FA8'),
+      front: buttons('#FFE27A') },
+    { id: 'kl-wolkjes', name: 'Wolkjespyjama', rarity: 'gewoon', sleeve: '#9FD8FF', trim: '#FFFFFF',
+      torso: '<path d="M26 236 Q150 268 274 236 L284 344 L16 344 Z" fill="#9FD8FF"/>' + cloud(94, 284, 0.9) + cloud(206, 296, 1) + cloud(124, 322, 0.8) + cloud(230, 330, 0.7),
+      front: buttons('#4FB3FF') },
+    { id: 'kl-streepjes', name: 'Streepjespyjama', rarity: 'gewoon', sleeve: '#FFD6E7', trim: '#FF4F8B',
+      torso: '<path d="M26 236 Q150 268 274 236 L284 344 L16 344 Z" fill="#FFFFFF"/>' + stripes +
+        '<rect x="176" y="282" width="34" height="28" rx="6" fill="#FF4F8B"/><path d="M180 290 h26" stroke="#FFFFFF" stroke-width="2"/>',
+      front: buttons('#FF4F8B') },
+    { id: 'kl-tuinbroek', name: 'Tuinbroek', rarity: 'gewoon', sleeve: '', trim: '',
+      torso: '<path d="M100 262 H200 V300 H284 V344 H16 V300 H100 Z" fill="#4A7BD6"/><rect x="128" y="272" width="44" height="24" rx="6" fill="#3D68BF"/>' +
+        '<path d="M106 262 L74 200 M194 262 L226 200" stroke="#4A7BD6" stroke-width="12" stroke-linecap="round"/>',
+      front: '<circle cx="106" cy="266" r="5" fill="#FFC83A"/><circle cx="194" cy="266" r="5" fill="#FFC83A"/>' },
+    { id: 'kl-tutu', name: 'Tutu', rarity: 'gewoon', sleeve: '', trim: '',
+      torso: '<rect x="0" y="268" width="300" height="16" fill="#FF8DC1"/>',
+      front: '<path d="M46 280 Q70 300 92 284 Q116 304 138 286 Q162 306 184 286 Q206 304 228 284 Q250 300 256 280 L272 318 Q150 340 28 318 Z" fill="#FFB3D6" opacity=".95"/>' +
+        '<path d="M60 300 Q80 316 100 302 Q124 320 150 304 Q176 320 200 302 Q220 316 240 300" stroke="#FFFFFF" stroke-width="3" fill="none" opacity=".7"/>' +
+        sparkle(96, 300, 5, '#FFFFFF') + sparkle(206, 306, 5, '#FFFFFF') },
+    { id: 'kl-dino', name: 'Dinopyjama', rarity: 'zeldzaam', sleeve: '#7ED957', trim: '#FFC83A',
+      torso: '<path d="M26 236 Q150 268 274 236 L284 344 L16 344 Z" fill="#7ED957"/>' +
+        '<ellipse cx="150" cy="306" rx="46" ry="40" fill="#EAFBC0"/>' +
+        '<g fill="#55B03D"><circle cx="70" cy="282" r="9"/><circle cx="232" cy="290" r="11"/><circle cx="84" cy="322" r="7"/><circle cx="220" cy="326" r="6"/></g>',
+      front: '' },
+    { id: 'kl-trui', name: 'Regenboogtrui', rarity: 'zeldzaam', sleeve: '#A98BFF', trim: '#FF4F8B',
+      torso: rainbowBands, front: '' },
+    { id: 'kl-ruimtepak', name: 'Ruimtepak', rarity: 'super', sleeve: '#EEF2FF', trim: '#9FB0D6',
+      torso: '<path d="M26 236 Q150 268 274 236 L284 344 L16 344 Z" fill="#EEF2FF"/>' +
+        '<rect x="0" y="300" width="300" height="12" fill="#FF8A1F"/><rect x="186" y="266" width="40" height="26" rx="6" fill="#9FB0D6"/>' +
+        '<circle cx="196" cy="279" r="4" fill="#FF4F8B"/><circle cx="210" cy="279" r="4" fill="#23C97F"/>',
+      front: '<circle cx="108" cy="280" r="15" fill="#3F8CFF"/><path d="' + star(108, 280, 8, 3.4) + '" fill="#FFFFFF"/>' }
+  ].map(function (i) { i.slot = 'kleding'; return i; });
+
   /* ---------- werelden (achtergronden) ---------- */
   const tiles = (function () {
     let s = '<g stroke="#FFFFFF" stroke-opacity=".6" stroke-width="2">';
@@ -421,5 +488,5 @@
       '<path d="M22 254 L36 214 L50 254 Z M30 236 L36 220 L42 236 Z" fill="#0F3B46"/><path d="M256 248 L272 202 L288 248 Z" fill="#0F3B46"/>' }
   ].map(function (i) { i.slot = 'achtergrond'; return i; });
 
-  window.PB_ITEMS = [].concat(kleuren, hoofd, ogen, nek, hand, voeten, achtergrond);
+  window.PB_ITEMS = [].concat(kleuren, hoofd, kleding, ogen, nek, hand, voeten, achtergrond);
 })();

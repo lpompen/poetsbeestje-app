@@ -1,29 +1,36 @@
 # Status Poetsbeestje
 
-Laatst bijgewerkt: 31 oktober 2026 · versie 1.0.0
+Laatst bijgewerkt: 31 oktober 2026 · versie 1.1.0 · live op https://lpompen.github.io/poetsbeestje-app/
 
-## Klaar
+## Nieuw in 1.1
 
-- Beginscherm met beestje in zijn wereld, tekstballon, ochtend/avond-status, reeks en kledingkast-teller.
-- Poetsscherm: aftellen 3-2-1, timer, vier kwadranten van elk een kwart van de poetstijd, vlekjes die verdwijnen per kwadrant, schuimbelletjes, tips, geluid en trillen bij wissel, pauze, stopvraag, automatisch pauzeren als de app naar de achtergrond gaat, scherm-aan-houden.
-- Cadeauscherm: cadeau openen met confetti, zeldzaamheid, meteen aantrekken, meerdere cadeaus achter elkaar.
-- Beloningsregels: 1 cadeau per volledige beurt; eerste cadeau altijd voor het hoofd; zeldzaam vanaf beurt 3, super zeldzaam vanaf beurt 8; bonus (minstens zeldzaam) bij een reeks van 3 dagen en daarna elke 7 dagen; glimster als alles verzameld is.
-- Kledingkast: 50 spullen in 7 vakjes, silhouetten voor wat nog op slot zit, "nieuw"-labels.
-- Ouderscherm achter rekensom: 14-dagenoverzicht, statistiek, namen, poetstijd 1/2/3 min, geluid/trillen, cadeautje klaarzetten, log kopiëren/bekijken/downloaden, alles wissen (met tweede tik).
-- Log van elke run (browser + `logs/last-run.log` via server), vorige run bewaard, serverlog, testlog.
-- PWA: offline, installeerbaar, licht en donker thema.
-- Automatische test (`npm test`): 50+ controles, laatste resultaat *ALLES OK* (zie `2026-10-31-eerste-opzet.log`).
+- Zes dieren uit een ei (eenhoorn, dino, pluisbol, poesje, konijntje, monstertje). Het ei krijgt barstjes tijdens de eerste beurt en komt uit door erop te tikken.
+- Nieuw vak Kleding: sterren-, wolkjes-, streepjes- en dinopyjama, tuinbroek, tutu, regenboogtrui, ruimtepak. Slaapmuts bij hoofd. Eerste avondcadeau = sterrenpyjama.
+- Aaien met de vinger: omlaag = knuffelen, heen en weer = kietelen, omhoog of te lang kietelen = boos, tikken = boing. Ogen volgen de vinger.
+- Tanden-animatie: grote mond met 16 tanden, borstel schrobt tand voor tand, vuil verdwijnt, tand glinstert.
+- Eerst poetsen: kledingkast, cadeaus en spelen pas na het poetsen. Eén cadeau per dagdeel.
+- Speeltijd: avond 1 min → gapen → slapen (tot 05:00). Schooldag ochtend 30 s → met rugzak naar school (tot 14:00). Weekend: avondtijd, daarna buiten spelen. Instelbaar voor ouders.
+- Extra schattig: grote glimogen met wimpers, blosjes, scheef kopje, snotbelletje tijdens het slapen.
+- Ouders: ander ei kiezen (spullen blijven).
+- Spel van versie 1 wordt bijgewerkt: wie al gepoetst had houdt Bubbel, anders mag je een ei kiezen.
+
+## Dagdelen
+
+- Ochtend: 05:00–13:59. Avond: 14:00–04:59 (na middernacht hoort nog bij de avond ervoor).
+
+## Getest
+
+- `npm test`: 75 controles, laatste resultaat *ALLES OK* (zie `2026-10-31-versie-1.1.log`).
 
 ## Bekende beperkingen
 
 - Geen koppeling met een echte tandenborstel; de timer loopt op de telefoon.
 - Voortgang staat per toestel; geen account of synchronisatie.
 - Trillen werkt niet op iPhone (Safari ondersteunt het niet).
-- Lettertypes komen van Google Fonts; zonder internet valt de app terug op een systeemlettertype.
+- Feestdagen en schoolvakanties kent de app niet; alleen zaterdag en zondag tellen als weekend.
 
 ## Ideeën voor later
 
 - Eten geven aan het beestje als tweede soort beloning.
 - Meerdere kinderen op één toestel.
-- Ouders zelf beloningen laten toevoegen (bijvoorbeeld "samen naar de speeltuin").
-- Seizoensspullen die alleen rond een feestdag te verdienen zijn.
+- Schoolvakanties instelbaar voor ouders.

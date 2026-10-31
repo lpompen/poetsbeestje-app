@@ -753,7 +753,7 @@ button { font: inherit; color: inherit; }
 }
 
 /* ---------- beweging ---------- */
-@keyframes idle { 0%, 100% { transform: translateY(0) scale(1, 1); } 50% { transform: translateY(-5px) scale(1.01, 0.99); } }
+@keyframes idle { 0%, 100% { transform: translateY(0) rotate(0) scale(1, 1); } 30% { transform: translateY(-5px) rotate(-2deg) scale(1.01, 0.99); } 60% { transform: translateY(0) rotate(1.5deg) scale(1, 1); } }
 @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
 @keyframes wiggle { 0%, 100% { transform: rotate(-1.4deg); } 50% { transform: rotate(1.4deg); } }
 @keyframes glow { from { stroke-opacity: 0.45; } to { stroke-opacity: 1; } }
@@ -776,3 +776,202 @@ button { font: inherit; color: inherit; }
     transition-duration: 0.001ms !important;
   }
 }
+
+/* =========================================================
+   VERSIE 1.1 — eieren, speeltijd, aaien, tanden-animatie
+   ========================================================= */
+:root {
+  --night-top: rgba(14, 22, 64, 0.82);
+  --night-bottom: rgba(14, 22, 64, 0.35);
+  --away-scrim: rgba(255, 255, 255, 0.55);
+}
+
+/* ---------- ei kiezen ---------- */
+.screen--egg { justify-content: space-between; }
+.egg-head { text-align: center; display: grid; gap: 4px; }
+.egg-sub { margin: 0; font-weight: 700; color: var(--ink-soft); text-wrap: balance; }
+.egg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-content: center; flex: 1 1 auto; min-height: 0; }
+.egg-pick {
+  border: 0;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: var(--r-lg);
+  padding: 8px 6px 10px;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  box-shadow: 0 4px 0 var(--shade);
+  cursor: pointer;
+  min-width: 0;
+  transition: transform 0.15s;
+}
+.egg-pick-art { width: 100%; aspect-ratio: 240 / 290; display: block; }
+.egg-pick-art svg { width: 100%; height: 100%; display: block; }
+.egg-pick-name { font-weight: 800; font-size: 0.9rem; }
+.egg-pick.is-on { box-shadow: 0 4px 0 var(--berry-deep), inset 0 0 0 4px var(--berry); transform: translateY(-4px); }
+.egg-pick.is-on .egg-wobble { animation: egg-wobble 0.6s ease-in-out infinite; }
+.candy:disabled { opacity: 0.55; cursor: default; transform: none; }
+
+/* ---------- het ei ---------- */
+.egg-wobble { transform-box: fill-box; transform-origin: 50% 92%; animation: egg-wobble 3.2s ease-in-out infinite; }
+.egg-svg.is-ready .egg-wobble, .is-brushing .egg-wobble { animation-duration: 0.7s; }
+.egg-svg.is-tapped .egg-wobble { animation: egg-shake 0.35s ease-in-out; }
+.egg-crack { transition: opacity 0.25s; }
+.egg-top { transform-box: fill-box; transform-origin: 30% 100%; transition: transform 0.7s cubic-bezier(.3, 1.4, .5, 1), opacity 0.7s; }
+.hatch-creature { transform-box: fill-box; transform-origin: 50% 100%; transform: scale(0.2) translateY(60px); opacity: 0; transition: transform 0.7s cubic-bezier(.3, 1.6, .5, 1) 0.25s, opacity 0.3s 0.25s; }
+.egg-bot { transition: opacity 0.6s; }
+.egg-svg.is-open .egg-top { transform: translate(-60px, -150px) rotate(-38deg); opacity: 0; }
+.egg-svg.is-open .egg-face { opacity: 0; }
+.egg-svg.is-open .egg-wobble { animation: none; }
+.egg-svg.is-open .hatch-creature { transform: none; opacity: 1; }
+.egg-svg.is-out .egg-bot { opacity: 0; }
+.hatch { width: min(80vw, 300px); aspect-ratio: 300 / 340; cursor: pointer; }
+.hatch svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* ---------- thuis: nacht, weg, effecten ---------- */
+.stage-art { touch-action: none; }
+.stage.is-play .stage-art { cursor: grab; }
+.stage-night { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s; background: linear-gradient(180deg, var(--night-top), var(--night-bottom)); }
+.stage-night svg { width: 100%; height: 40%; display: block; }
+.stage.is-night .stage-night { opacity: 1; }
+.stage.is-night .stage-scene { filter: brightness(0.5) saturate(0.7); transition: filter 1.2s; }
+.stage-away {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  background: var(--away-scrim);
+}
+.stage-away p {
+  margin: 0;
+  max-width: 260px;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: var(--r-lg);
+  padding: 12px 16px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  box-shadow: 0 4px 0 var(--shade);
+}
+.away-bag { width: 84px; height: 84px; animation: bob 1.6s ease-in-out infinite; }
+.say { pointer-events: none; z-index: 3; }
+.say.pop { animation: pop-in 0.3s ease-out both; }
+.fx-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
+.fx { position: absolute; transform: translate(-50%, -50%); will-change: transform, opacity; }
+.fx-heart { width: 30px; height: 30px; animation: fx-float 1.3s ease-out forwards; }
+.fx-heart svg { width: 100%; height: 100%; display: block; }
+.fx-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--berry);
+  -webkit-text-stroke: 1.5px var(--card);
+  paint-order: stroke fill;
+  animation: fx-float 1s ease-out forwards;
+}
+.fx-steam { width: 30px; height: 22px; border-radius: 50%; background: var(--card); opacity: 0.85; box-shadow: 10px -6px 0 -2px var(--card), -10px -4px 0 -4px var(--card); animation: fx-steam 1.2s ease-out forwards; }
+.fx-zzz { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--on-accent); -webkit-text-stroke: 1.5px var(--rare); paint-order: stroke fill; animation: fx-zzz 2.6s ease-out forwards; }
+
+.mood-giggle .pb-creature { animation: giggle 0.22s ease-in-out infinite; transform-origin: 50% 80%; }
+.mood-cuddle .pb-creature { animation: sway 1.2s ease-in-out infinite; }
+.mood-angry .pb-creature { animation: angry-shake 0.3s ease-in-out 3; }
+.mood-sleep .pb-creature { animation: breathe 3.6s ease-in-out infinite; }
+.mood-yawn .pb-creature { animation: stretch 2.4s ease-in-out both; }
+.pb-snot { transform-box: fill-box; transform-origin: 0% 100%; animation: snot 3.6s ease-in-out infinite; }
+.stage-art.is-boing .pb-creature { animation: boing 0.45s ease-out; }
+.stage-art.is-no .pb-creature, .candy.is-no { animation: no-no 0.4s ease-in-out; }
+.stage-art.is-leaving .pb-creature { animation: walk-off 1.8s ease-in forwards; }
+.pb-look { transition: transform 0.15s ease-out; }
+
+.hints { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: -4px; }
+.hint-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  color: var(--ink);
+  background: var(--bubble-a);
+  border-radius: 999px;
+  padding: 4px 10px 4px 6px;
+}
+.hint-chip .ic { width: 16px; height: 16px; }
+.chip--play { background: var(--sun); color: var(--on-sun); }
+.play-bar { display: inline-block; width: 48px; height: 8px; border-radius: 4px; background: rgba(0, 0, 0, 0.15); overflow: hidden; }
+.play-bar b { display: block; height: 100%; width: 100%; background: var(--on-sun); border-radius: 4px; transition: width 0.5s linear; }
+.lock-note {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.candy.is-locked { filter: saturate(0.35); opacity: 0.85; }
+.candy.is-locked .count { display: none; }
+.pill--time { display: inline-flex; align-items: center; gap: 4px; background: var(--sun); color: var(--on-sun); }
+.field-label { margin: 2px 0 -4px; font-weight: 800; font-size: 0.9rem; color: var(--ink-soft); }
+
+/* ---------- poetsen: mondkaart ---------- */
+.stage--brush { min-height: 150px; }
+.chart {
+  flex: none;
+  background: var(--card);
+  border-radius: var(--r-lg);
+  padding: 8px 10px 10px;
+  display: grid;
+  gap: 6px;
+  box-shadow: 0 4px 0 var(--shade);
+}
+.chart-label { margin: 0; text-align: center; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.1; color: var(--ink); }
+.chart-now { color: var(--ink-soft); font-weight: 600; }
+.chart-label b { font-weight: 800; color: var(--berry); }
+.chart .seg { background: var(--line); }
+.chart-art { width: 100%; max-width: 360px; margin: 0 auto; aspect-ratio: 320 / 180; max-height: 22vh; }
+.chart-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.mc-hl { fill: none; stroke: var(--sun); stroke-width: 4; stroke-dasharray: 10 7; opacity: 0; }
+.mc-hl.on { opacity: 1; animation: march 0.8s linear infinite; }
+.mc-shine { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.mc-shine.on { opacity: 1; animation: twinkle 1.2s ease-in-out infinite; }
+.mc-brush, .pb-minibrush { transform-box: view-box; transform-origin: 0 0; }
+.mc-brush { transition: transform 0.45s cubic-bezier(.4, 1.3, .6, 1); }
+.pb-minibrush { transition: transform 0.45s ease; }
+.bg-scrub { animation: scrub 0.34s linear infinite; }
+.bg-foam { transform-box: fill-box; transform-origin: 50% 100%; animation: foam-pulse 0.7s ease-in-out infinite alternate; }
+.screen--brush:not(.is-brushing) .bg-scrub,
+.screen--brush:not(.is-brushing) .bg-foam { animation-play-state: paused; }
+.screen--brush:not(.is-brushing) .bg-foam { opacity: 0.4; }
+
+@media (max-height: 700px) {
+  .chart-art { max-height: 18vh; }
+  .chart-label { font-size: 1.15rem; }
+  .egg-pick-name { font-size: 0.8rem; }
+}
+
+@keyframes egg-wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
+@keyframes egg-shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 50% { transform: rotate(8deg); } 75% { transform: rotate(-5deg); } }
+@keyframes fx-float { from { transform: translate(-50%, -50%) scale(0.6); opacity: 0; } 20% { opacity: 1; } to { transform: translate(calc(-50% + var(--dx, 0px)), -150%) translateY(-60px) scale(1.15); opacity: 0; } }
+@keyframes fx-steam { from { transform: translate(-50%, -50%) scale(0.4); opacity: 0.9; } to { transform: translate(-50%, -50%) translateY(-50px) scale(1.4); opacity: 0; } }
+@keyframes fx-zzz { from { transform: translate(-50%, -50%) scale(0.6) rotate(-10deg); opacity: 0; } 25% { opacity: 1; } to { transform: translate(-50%, -50%) translate(40px, -90px) scale(1.4) rotate(10deg); opacity: 0; } }
+@keyframes giggle { 0%, 100% { transform: rotate(-3deg) scale(1.02, 0.98); } 50% { transform: rotate(3deg) scale(0.98, 1.02); } }
+@keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg) translateY(-3px); } }
+@keyframes angry-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+@keyframes breathe { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.02, 0.98) translateY(2px); } }
+@keyframes stretch { 0% { transform: scale(1); } 40% { transform: scale(0.96, 1.07); } 100% { transform: scale(1); } }
+@keyframes snot { 0%, 100% { transform: scale(0.5); } 50% { transform: scale(1.25); } }
+@keyframes boing { 0% { transform: scale(1); } 30% { transform: scale(1.12, 0.86); } 60% { transform: scale(0.94, 1.08) translateY(-10px); } 100% { transform: scale(1); } }
+@keyframes no-no { 0%, 100% { transform: translateX(0) rotate(0); } 25% { transform: translateX(-8px) rotate(-3deg); } 75% { transform: translateX(8px) rotate(3deg); } }
+@keyframes walk-off { 0% { transform: translateX(0); } 10% { transform: translateX(-4%) translateY(-6px); } 100% { transform: translateX(160%) translateY(0); } }
+@keyframes march { to { stroke-dashoffset: -34; } }
+@keyframes twinkle { 0%, 100% { transform: scale(0.8); } 50% { transform: scale(1.2); } }
+@keyframes scrub { 0% { transform: translate(0, 0); } 25% { transform: translate(5px, -3px); } 50% { transform: translate(0, -5px); } 75% { transform: translate(-5px, -2px); } 100% { transform: translate(0, 0); } }
+@keyframes foam-pulse { from { transform: scale(0.85); } to { transform: scale(1.1); } }
