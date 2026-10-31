@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.1';
   const PREVIEW = !!window.PB_PREVIEW;
   const ART = window.PB_ART;
   const ITEMS = window.PB_ITEMS || [];
@@ -113,6 +113,10 @@
     }
     function enableRemote() {
       if (PREVIEW || location.protocol === 'file:') return;
+      if (/\.github\.io$/.test(location.hostname)) {
+        add('info', 'GitHub Pages: geen server, log staat alleen in de browser (ouderscherm → Kopieer log)');
+        return;
+      }
       fetch('api/health', { cache: 'no-store' })
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) {

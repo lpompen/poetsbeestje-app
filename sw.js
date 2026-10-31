@@ -1,6 +1,6 @@
 /* Poetsbeestje — sw.js: werkt ook zonder internet (badkamer-wifi!).
    Verhoog CACHE bij elke nieuwe versie, dan halen telefoons de nieuwe bestanden op. */
-const CACHE = 'poetsbeestje-1.0.0';
+const CACHE = 'poetsbeestje-1.0.1';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './data/items.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (e) => {

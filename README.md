@@ -2,6 +2,8 @@
 
 Poets-app voor kinderen, geïnspireerd op de Philips Sonicare For Kids-app. Je kind poetst twee minuten samen met een eigen beestje (standaard heet het **Bubbel**). De tijd is verdeeld in vier stukken van 30 seconden: boven links, boven rechts, onder rechts, onder links. Bij elk stuk verdwijnen de vlekjes van de tanden van het beestje. Na een volledige beurt krijgt je kind een cadeautje: iets nieuws om het beestje mee aan te kleden.
 
+**Live:** https://lpompen.github.io/poetsbeestje-app/
+
 Het beestje, de kleding en de werelden zijn eigen tekeningen. Er zitten geen Philips-figuren of -logo's in.
 
 ## Wat zit erin
