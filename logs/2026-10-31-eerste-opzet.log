@@ -1,0 +1,64 @@
+POETSBEESTJE — LOG VAN DE LAATSTE TEST
+Gedraaid 31-10-2026, 20:29:42 · Node v22.23.4
+----
++  0.1s OK   server start en /api/health antwoordt — http://localhost:3917/
++  1.0s OK   beginscherm toont het beestje
++  1.0s OK   naam staat bovenaan
++  1.0s OK   tekstballon heeft tekst — Hoi! Ik ben Bubbel. Poets je met me mee?
++  1.2s      screenshot 01-beginscherm.png
++  1.3s OK   aftellen verschijnt
++  1.4s OK   aftellen weg, poetsen loopt
++  1.4s OK   na 40 s is "Boven rechts" aan de beurt — Boven rechts
++  1.4s OK   vlekjes boven links zijn weg — 0,0,0,0,0
++  1.4s OK   vlekjes onder rechts zitten er nog — 1,1,1,1
++  1.4s OK   timer loopt af — 1:20
++  1.6s      screenshot 02-poetsen.png
++  1.6s OK   na 2 minuten: cadeauscherm
++  1.6s OK   beurt opgeslagen als afgemaakt — {"at":"2026-10-31T18:30:01.681Z","day":"2026-10-31","part":"avond","seconds":120,"target":120,"completed":true}
++  1.6s OK   1 cadeautje klaar
++  1.8s      screenshot 03-cadeau-dicht.png
++  1.8s OK   cadeautje open, item zichtbaar
++  1.8s OK   eerste cadeau is iets voor op het hoofd — h-pet (Pet)
++  2.0s      screenshot 04-cadeau-open.png
++  2.1s OK   item meteen aangetrokken
++  2.1s OK   terug op beginscherm met nieuwe tekst — Kijk, mijn nieuwe pet!
++  2.1s OK   avond-chip staat op klaar
++  2.3s      screenshot 05-beginscherm-met-item.png
++  2.3s OK   kledingkast open
++  2.4s OK   hoofd-tab: gekozen item gemarkeerd — h-pet
++  2.4s OK   hoofd-tab: andere items op slot — 9
++  2.5s      screenshot 06-kledingkast.png
++  2.5s OK   nog eens tikken doet het uit
++  2.6s OK   en weer aan
++  2.7s OK   op slot getikt geeft melding — Gewoon — blijf poetsen om dit te verdienen!
++  2.8s OK   kleur blijft aan (kan niet uit)
++  3.0s      screenshot 07-kledingkast-werelden.png
++  3.4s OK   fout antwoord: terug naar beginscherm
++  3.9s OK   goed antwoord: ouderscherm
++  3.9s OK   overzicht telt 1 beurt
++  4.0s      screenshot 08-ouders.png
++  4.1s OK   log in de app bevat de poetsbeurt
++  4.1s OK   log zonder fouten — Samenvatting: 0 fout(en), 0 waarschuwing(en), 28 meldingen
++  4.2s OK   poetstijd op 1 minuut gezet
++  4.3s OK   nieuwe naam op beginscherm
++  4.3s OK   cadeau-melding op beginscherm
++  4.4s OK   cadeau van ouders
++  6.5s OK   stopvraag verschijnt
++  6.9s OK   gestopte beurt telt niet als afgemaakt — {"at":"2026-10-31T18:32:15.201Z","day":"2026-10-31","part":"avond","seconds":12,"target":60,"completed":false}
++  6.9s OK   terug op beginscherm
++  7.5s OK   reeks van 3 dagen geeft extra cadeau — [{"min":"gewoon","reason":"poetsbeurt"},{"min":"zeldzaam","reason":"reeks","days":3}]
++  7.5s OK   knop "Volgende cadeautje" zichtbaar
++  7.6s OK   bonus-titel — Bonus! 3 dagen op rij
++  7.6s OK   bonus is minstens zeldzaam — Super zeldzaam
++  7.8s      screenshot 09-bonus-cadeau.png
++  8.4s      screenshot 10-donker.png
++  8.4s OK   donker thema actief — rgb(6, 38, 58)
++  8.8s OK   geen horizontale scroll op 360 px
++  8.8s OK   knoppen passen op klein scherm (640 px) — 620px
++  8.9s      screenshot 11-klein-scherm.png
++  9.6s OK   geen JavaScript-fouten op de pagina
++  9.6s OK   geen foutmeldingen in de console
++  9.6s      (genegeerd: 4 netwerkmelding(en), bv. lettertypes zonder internet)
++  9.6s OK   server schreef log van de laatste app-run naar logs/last-run.log
+----
+Resultaat: ALLES OK

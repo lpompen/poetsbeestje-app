@@ -1,0 +1,9 @@
+node_modules/
+test-output/
+preview/
+logs/last-run.log
+logs/previous-run.log
+logs/server.log
+logs/last-test.log
+.DS_Store
+Thumbs.db

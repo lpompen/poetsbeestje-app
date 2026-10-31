@@ -1,0 +1,15 @@
+{
+  "name": "Poetsbeestje",
+  "short_name": "Poetsbeestje",
+  "description": "Poets twee minuten met je eigen beestje en verdien nieuwe spullen om het aan te kleden.",
+  "lang": "nl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#43D3F0",
+  "theme_color": "#43D3F0",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

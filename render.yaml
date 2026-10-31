@@ -1,0 +1,14 @@
+# Poetsbeestje op Render (net als de WK-poule).
+# Render leest dit bestand als je een "Blueprint" maakt vanuit de GitHub-repo.
+services:
+  - type: web
+    name: poetsbeestje
+    runtime: node
+    plan: free
+    buildCommand: "echo 'geen build nodig'"
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"

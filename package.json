@@ -1,0 +1,19 @@
+{
+  "name": "poetsbeestje-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Poets-app voor kinderen: twee minuten poetsen met je eigen beestje en na elke beurt nieuwe spullen om het aan te kleden.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node scripts/smoke-test.mjs",
+    "preview": "node scripts/build-preview.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Poetsbeestje</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Poets twee minuten met je eigen beestje en verdien na elke beurt nieuwe spullen om het aan te kleden.">
+<meta name="theme-color" content="#43D3F0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Poetsbeestje">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@600;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- BODY-START -->
+<svg class="pb-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs id="pb-defs"></defs></svg>
+
+<div class="app" id="app">
+
+  <!-- THUIS -->
+  <section class="screen screen--home" id="scr-home" aria-labelledby="home-name">
+    <header class="topbar">
+      <div class="topbar-text">
+        <p class="eyebrow" id="home-greet">Hallo!</p>
+        <h1 class="name" id="home-name">Bubbel</h1>
+      </div>
+      <button class="icon-btn" id="btn-parent" type="button" aria-label="Voor ouders">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </header>
+
+    <div class="stage" id="home-stage">
+      <div class="stage-scene" id="home-scene"></div>
+      <div class="stage-art" id="home-art"></div>
+      <p class="say" id="home-say" aria-live="polite"></p>
+    </div>
+
+    <div class="today" id="home-today"></div>
+
+    <button class="gift-banner" id="btn-pending" type="button" hidden></button>
+
+    <div class="actions">
+      <button class="candy candy--berry candy--xl" id="btn-brush" type="button">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l8-8"/><path d="M10 14l7-7 3 3-7 7z"/><path d="M14 9l-1.5-1.5M16 7l-1.5-1.5M18 5l-1.5-1.5"/></svg>
+        Poetsen!
+      </button>
+      <button class="candy candy--sun" id="btn-wardrobe" type="button">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8.5V8c0-1.5 2-2 2-3.5a2 2 0 1 0-4 0"/><path d="M12 8.5 3.4 15a1.4 1.4 0 0 0 .8 2.5h15.6a1.4 1.4 0 0 0 .8-2.5z"/></svg>
+        Kledingkast
+        <span class="count" id="wardrobe-count"></span>
+        <span class="new-badge" id="wardrobe-new" hidden></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- POETSEN -->
+  <section class="screen screen--brush" id="scr-brush" hidden aria-label="Poetsen">
+    <div class="brush-top">
+      <button class="icon-btn" id="btn-stop" type="button" aria-label="Stoppen">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="timer" id="brush-timer" role="timer" aria-label="Tijd over">2:00</div>
+      <button class="icon-btn" id="btn-pause" type="button" aria-label="Pauze">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 5v14M15 5v14"/></svg>
+      </button>
+    </div>
+
+    <div class="stage stage--brush" id="brush-stage">
+      <div class="stage-scene" id="brush-scene"></div>
+      <div class="stage-art" id="brush-art"></div>
+      <div class="foam" id="brush-foam" aria-hidden="true"></div>
+    </div>
+
+    <p class="tip" id="brush-tip" aria-live="polite">Zet je tandenborstel klaar…</p>
+    <div class="quads" id="brush-quads"></div>
+    <div class="bar" id="brush-bar" aria-hidden="true"></div>
+
+    <div class="sheet" id="brush-sheet" hidden role="dialog" aria-labelledby="sheet-title">
+      <p class="sheet-title" id="sheet-title">Even pauze</p>
+      <p class="sheet-text" id="sheet-text"></p>
+      <div class="sheet-actions">
+        <button class="candy candy--leaf" id="btn-resume" type="button">Verder poetsen</button>
+        <button class="candy candy--ghost" id="btn-quit" type="button">Stoppen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CADEAUTJE -->
+  <section class="screen screen--reward" id="scr-reward" hidden aria-labelledby="reward-title">
+    <div class="reward-head">
+      <h2 class="reward-title" id="reward-title">Super gepoetst!</h2>
+      <p class="reward-sub" id="reward-sub">Tik op je cadeautje</p>
+    </div>
+    <div class="reward-stage">
+      <div class="reward-art" id="reward-art" aria-hidden="true"></div>
+      <button class="gift" id="btn-gift" type="button" aria-label="Cadeautje openmaken">
+        <svg viewBox="0 0 200 200" aria-hidden="true">
+          <ellipse cx="100" cy="186" rx="70" ry="9" class="g-shadow"/>
+          <g class="gift-box">
+            <rect x="38" y="92" width="124" height="90" rx="14" class="g-box"/>
+            <rect x="38" y="92" width="124" height="14" class="g-dark"/>
+            <rect x="88" y="92" width="24" height="90" class="g-rib"/>
+          </g>
+          <g class="gift-lid">
+            <rect x="28" y="68" width="144" height="30" rx="11" class="g-box"/>
+            <rect x="88" y="68" width="24" height="30" class="g-rib"/>
+            <path d="M100 68 C78 30 48 44 64 64 C70 70 86 70 100 68Z" class="g-rib"/>
+            <path d="M100 68 C122 30 152 44 136 64 C130 70 114 70 100 68Z" class="g-rib"/>
+            <circle cx="100" cy="66" r="9" class="g-ribdark"/>
+          </g>
+          <g class="gift-glow"><path d="M100 10 L106 34 L100 28 L94 34Z M40 40 L58 54 L50 54 L48 62Z M160 40 L142 54 L150 54 L152 62Z" class="g-rib"/></g>
+        </svg>
+      </button>
+      <div class="reveal" id="reveal" hidden>
+        <div class="reveal-thumb" id="reveal-thumb"></div>
+        <p class="rarity" id="reveal-rarity"></p>
+        <p class="reveal-name" id="reveal-name"></p>
+        <p class="reveal-slot" id="reveal-slot"></p>
+      </div>
+    </div>
+    <div class="actions" id="reward-actions" hidden>
+      <button class="candy candy--berry" id="btn-wear" type="button">Meteen aantrekken!</button>
+      <button class="candy candy--sun" id="btn-next-gift" type="button" hidden>Volgende cadeautje!</button>
+      <button class="candy candy--ghost" id="btn-reward-done" type="button">Klaar</button>
+    </div>
+  </section>
+
+  <!-- KLEDINGKAST -->
+  <section class="screen screen--wardrobe" id="scr-wardrobe" hidden aria-labelledby="wardrobe-title">
+    <header class="topbar">
+      <button class="icon-btn" id="btn-wardrobe-back" type="button" aria-label="Terug">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="name name--sm" id="wardrobe-title">Kledingkast</h2>
+      <span class="pill" id="wardrobe-progress"></span>
+    </header>
+    <div class="stage stage--compact">
+      <div class="stage-scene" id="wardrobe-scene"></div>
+      <div class="stage-art" id="wardrobe-art"></div>
+    </div>
+    <div class="tabs-wrap"><div class="tabs" role="tablist" id="wardrobe-tabs" aria-label="Soort spullen"></div></div>
+    <p class="hint" id="wardrobe-hint"></p>
+    <div class="grid-wrap"><div class="grid" id="wardrobe-grid"></div></div>
+  </section>
+
+  <!-- OUDERS -->
+  <section class="screen screen--parent" id="scr-parent" hidden aria-labelledby="parent-title">
+    <header class="topbar">
+      <button class="icon-btn" id="btn-parent-back" type="button" aria-label="Terug">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="name name--sm" id="parent-title">Voor ouders</h2>
+      <span></span>
+    </header>
+    <div class="parent-scroll">
+      <div class="panel">
+        <h3>Overzicht</h3>
+        <div class="stats" id="parent-stats"></div>
+        <div class="history-wrap">
+          <div class="history" id="parent-history"></div>
+          <p class="legend"><span class="hdot on"></span> ochtend <span class="hdot hdot--moon on"></span> avond · laatste 14 dagen</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Namen</h3>
+        <label class="field" for="in-creature"><span>Naam van het beestje</span><input id="in-creature" type="text" maxlength="18" autocomplete="off"></label>
+        <label class="field" for="in-kid"><span>Naam van je kind (mag leeg)</span><input id="in-kid" type="text" maxlength="18" autocomplete="off"></label>
+      </div>
+
+      <div class="panel">
+        <h3>Poetstijd</h3>
+        <p class="muted">Tandartsen raden twee minuten aan. De tijd wordt in vier stukken verdeeld: boven links, boven rechts, onder rechts, onder links.</p>
+        <div class="segmented" role="radiogroup" aria-label="Poetstijd">
+          <label><input type="radio" name="duration" id="dur-60" value="60"><span>1 minuut</span></label>
+          <label><input type="radio" name="duration" id="dur-120" value="120"><span>2 minuten</span></label>
+          <label><input type="radio" name="duration" id="dur-180" value="180"><span>3 minuten</span></label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Geluid en trillen</h3>
+        <label class="switch" for="in-sound"><input type="checkbox" id="in-sound"><span class="track"></span><span>Geluidjes bij wisselen en klaar</span></label>
+        <label class="switch" for="in-vibrate"><input type="checkbox" id="in-vibrate"><span class="track"></span><span>Trillen bij wisselen (als je telefoon dat kan)</span></label>
+      </div>
+
+      <div class="panel">
+        <h3>Extra cadeautje</h3>
+        <p class="muted">Goed gedaan bij de tandarts? Zet een cadeautje klaar. Je kind opent het op het beginscherm.</p>
+        <button class="candy candy--sun candy--sm" id="btn-parent-gift" type="button">Cadeautje klaarzetten</button>
+      </div>
+
+      <div class="panel">
+        <h3>Log van de laatste run</h3>
+        <p class="muted">Gaat er iets mis? Kopieer de log en plak hem in de chat met Claude.</p>
+        <div class="row">
+          <button class="candy candy--ghost candy--sm" id="btn-log-copy" type="button">Kopieer log</button>
+          <button class="candy candy--ghost candy--sm" id="btn-log-show" type="button">Bekijk log</button>
+          <button class="candy candy--ghost candy--sm" id="btn-log-download" type="button">Download</button>
+        </div>
+        <textarea class="log" id="log-text" readonly hidden rows="12" aria-label="Log van de laatste run"></textarea>
+      </div>
+
+      <div class="panel panel--danger">
+        <h3>Opnieuw beginnen</h3>
+        <p class="muted">Wist alle beurten en verzamelde spullen op dit toestel.</p>
+        <button class="candy candy--ghost candy--sm" id="btn-reset" type="button">Alles wissen</button>
+      </div>
+
+      <p class="version" id="parent-version"></p>
+    </div>
+  </section>
+
+  <div class="modal" id="gate" hidden role="dialog" aria-modal="true" aria-labelledby="gate-q">
+    <div class="modal-card">
+      <p class="eyebrow">Alleen voor ouders</p>
+      <p class="gate-q" id="gate-q">Hoeveel is 7 × 4?</p>
+      <div class="gate-answers" id="gate-answers"></div>
+      <button class="link-btn" id="btn-gate-cancel" type="button">Terug</button>
+    </div>
+  </div>
+
+  <div class="countdown" id="countdown" hidden aria-live="assertive"><span id="countdown-num">3</span></div>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+</div>
+<!-- BODY-END -->
+<script src="data/items.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
