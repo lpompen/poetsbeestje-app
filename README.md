@@ -9,7 +9,10 @@ Het beestje, de kleding en de werelden zijn eigen tekeningen. Er zitten geen Phi
 ## Wat zit erin
 
 - **Een ei kiezen:** eenhoorn, dino, pluisbol, poesje, konijntje of monstertje. Het ei krijgt barstjes tijdens de eerste poetsbeurt; daarna tikt je kind het open.
-- **Poetstimer** met aftellen, pauze en stopknop. Een grote mond met 16 tanden laat zien welke tand nu aan de beurt is: de tandenborstel schrobt er met schuim overheen en de tand wordt van geel glinsterend wit. Vier stukken: boven links, boven rechts, onder rechts, onder links, met een geluidje en trilling bij elke wissel. Het scherm blijft aan tijdens het poetsen (waar de telefoon dat toestaat).
+- **Poetstimer** met aftellen, pauze en stopknop. Een grote ronde mond met 16 tanden en grappige bacillen laat zien welke tand nu aan de beurt is: de tandenborstel poetst de bacillen weg en de tand wordt van geel glinsterend wit. Vier stukken: boven links, boven rechts, onder rechts, onder links, met een geluidje en trilling bij elke wissel. Het scherm blijft aan tijdens het poetsen (waar de telefoon dat toestaat).
+- **Pratend beestje:** begroet het kind bij naam, spreekt poetstips en aanmoedigingen uit en lacht met een hoger, schattig stemmetje. De browser kiest hiervoor een Nederlandse stem als die op het toestel beschikbaar is.
+- **Muziek tijdens het poetsen:** een rustig, zacht deuntje dat automatisch pauzeert en stopt met de timer.
+- **Hand- of elektrische tandenborstel:** de tips passen zich aan de gekozen borstel aan. Twee minuten blijft de standaard; 1½ minuut is als handmatige keuze beschikbaar.
 - **Eerst poetsen, dan spelen.** Aankleden, cadeautjes openen en spelen kan alleen na het poetsen.
 - **Speeltijd:** 's avonds 1 minuut, dan gaapt het dier en valt het in slaap. Op schooldagen 's ochtends 30 seconden, dan gaat het met een rugzak naar school (terug om 14:00). In het weekend geldt de avondtijd en gaat het buiten spelen. Ouders kunnen de tijden aanpassen.
 - **Aaien met je vinger:** omlaag aaien = knuffelen (hartjes), heen en weer kriebelen = kietelen (hihi), omhoog aaien (tegen de haren in) of te lang kietelen = boos (stoomwolkjes). Even tikken = boing. De oogjes volgen je vinger.
@@ -17,7 +20,7 @@ Het beestje, de kleding en de werelden zijn eigen tekeningen. Er zitten geen Phi
 - **Reeks-bonus:** 3 dagen op rij ochtend én avond gepoetst (en daarna elke 7 dagen) geeft een extra, zeldzaam cadeau.
 - **Kledingkast** met 60 spullen in 8 vakjes: hoofd, kleding (o.a. 4 pyjama's), ogen, versiering, in de hand, voeten, kleur en wereld. Wat je nog niet hebt, zie je als silhouet.
 - **Zeldzaamheid:** gewoon, zeldzaam en super zeldzaam. Zeldzame spullen komen vanaf beurt 3, super zeldzame vanaf beurt 8.
-- **Ouderscherm** achter een rekensom: overzicht van 14 dagen, ander ei kiezen, namen, poetstijd (1, 2 of 3 minuten), speeltijd, geluid en trillen aan/uit, zelf een cadeautje klaarzetten, log bekijken en alles wissen.
+- **Ouderscherm** achter een rekensom: overzicht van 14 dagen, ander ei kiezen, namen, tandenborstel, poetstijd (1, 1½, 2 of 3 minuten), speeltijd, stem, muziek, geluid en trillen aan/uit, zelf een cadeautje klaarzetten, log bekijken en alles wissen.
 - **Werkt offline** en is als app op het beginscherm te zetten (PWA).
 - **Licht en donker thema**, volgt de instelling van de telefoon.
 

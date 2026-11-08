@@ -1,4 +1,4 @@
-/* Poetsbeestje — app.js (versie 1.1)
+/* Poetsbeestje — app.js (versie 1.2)
    Schermen: ei kiezen, thuis, poetsen, cadeautje/uitkomen, kledingkast en ouders.
 
    Spelregels in het kort:
@@ -16,7 +16,7 @@
 (function () {
   'use strict';
 
-  const VERSION = '1.1.0';
+  const VERSION = '1.2.0';
   const PREVIEW = !!window.PB_PREVIEW;
   const ART = window.PB_ART;
   const EGG = window.PB_EGG;
@@ -35,8 +35,7 @@
     super: { label: 'Super zeldzaam', order: 2, weight: 7 }
   };
   const QUADS = ['Boven links', 'Boven rechts', 'Onder rechts', 'Onder links'];
-  const TIPS = [
-    'Kleine rondjes maken!',
+  const COMMON_TIPS = [
     'Ook de achterste tanden!',
     'Goed zo, ga zo door!',
     'Rustig poetsen, niet te hard.',
@@ -45,6 +44,8 @@
     'Hou vol, je doet het super!',
     'Ook de binnenkant van je tanden.'
   ];
+  const HAND_TIPS = ['Maak kleine rondjes!', 'Zet de borstel schuin langs het tandvlees.'];
+  const ELECTRIC_TIPS = ['Laat de borstel rustig tand voor tand werken.', 'Niet schrobben: laat de elektrische borstel het werk doen.'];
 
   /* ---------- hulpjes ---------- */
   function $(sel, el) { return (el || document).querySelector(sel); }
@@ -191,7 +192,7 @@
         hatched: false,
         creatureName: '',
         kidName: '',
-        settings: { duration: 120, sound: true, vibrate: true, playEvening: 60, playMorning: 30 },
+        settings: { duration: 120, brushType: 'hand', sound: true, voice: true, music: true, vibrate: true, playEvening: 60, playMorning: 30 },
         owned: START_IDS.slice(),
         outfit: { kleur: 'k-natuur', hoofd: null, kleding: null, ogen: null, nek: null, hand: 'ha-tandenborstel', voeten: null, achtergrond: 'a-badkamer' },
         sessions: [],
@@ -227,7 +228,8 @@
           s.outfit[slot] = fresh().outfit[slot];
         }
       });
-      if ([60, 120, 180].indexOf(Number(s.settings.duration)) < 0) s.settings.duration = 120;
+      if ([60, 90, 120, 180].indexOf(Number(s.settings.duration)) < 0) s.settings.duration = 120;
+      if (['hand', 'electric'].indexOf(s.settings.brushType) < 0) s.settings.brushType = 'hand';
       if ([60, 120, 180].indexOf(Number(s.settings.playEvening)) < 0) s.settings.playEvening = 60;
       if ([0, 30, 60].indexOf(Number(s.settings.playMorning)) < 0) s.settings.playMorning = 30;
       return s;
@@ -367,7 +369,7 @@
      GELUID EN TRILLEN
      ========================================================= */
   const Sound = (function () {
-    let ctx = null, warned = false;
+    let ctx = null, warned = false, musicTimer = 0, musicStep = 0;
     function ensure() {
       if (!S || !S.settings.sound) return null;
       try {
@@ -400,8 +402,29 @@
       } catch (e) { if (!warned) { Log.warn('geluid afspelen mislukt', e.message); warned = true; } }
     }
     function seq(notes, gap, dur, type, vol) { notes.forEach(function (f, i) { tone(f, i * gap, dur, type, vol); }); }
+    const melody = [523, 659, 784, 659, 587, 698, 880, 698, 523, 659, 784, 1047, 784, 659, 587, 659];
+    function musicStart() {
+      if (musicTimer || !S || !S.settings.sound || !S.settings.music) return;
+      musicStep = 0;
+      const play = function () {
+        tone(melody[musicStep % melody.length], 0, 0.42, 'sine', 0.025);
+        if (musicStep % 4 === 0) tone(melody[musicStep % melody.length] / 2, 0, 0.46, 'triangle', 0.012);
+        musicStep++;
+      };
+      play();
+      musicTimer = setInterval(play, 520);
+      Log.info('achtergronddeuntje gestart');
+    }
+    function musicStop() {
+      if (!musicTimer) return;
+      clearInterval(musicTimer);
+      musicTimer = 0;
+      Log.info('achtergronddeuntje gestopt');
+    }
     return {
       unlock: ensure,
+      musicStart: musicStart,
+      musicStop: musicStop,
       tap: function () { tone(660, 0, 0.08, 'triangle', 0.07); },
       count: function () { tone(880, 0, 0.14, 'triangle', 0.12); },
       go: function () { seq([523, 659, 784], 0.1, 0.18, 'triangle', 0.15); },
@@ -416,6 +439,55 @@
       yawn: function () { tone(520, 0, 1.2, 'sine', 0.1, 180); },
       pop: function () { seq([660, 990, 1320], 0.08, 0.15, 'sine', 0.12); }
     };
+  })();
+
+  const Voice = (function () {
+    let warned = false, lastAt = 0, lastText = '', greetingKey = '', lastLaugh = 0;
+    function supported() { return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window; }
+    function voiceForDutch() {
+      const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      return voices.find(function (v) { return /^nl[-_]/i.test(v.lang); }) || voices.find(function (v) { return /^nl/i.test(v.lang); }) || null;
+    }
+    function speak(text, options) {
+      if (!S || !S.settings.voice || !text) return false;
+      if (!supported()) {
+        if (!warned) { Log.warn('spraak niet beschikbaar op dit toestel'); warned = true; }
+        return false;
+      }
+      const now = Date.now();
+      if (text === lastText && now - lastAt < 1800) return false;
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'nl-NL';
+        u.rate = options && options.rate ? options.rate : 0.96;
+        u.pitch = options && options.pitch ? options.pitch : 1.35;
+        u.volume = options && options.volume ? options.volume : 0.82;
+        const v = voiceForDutch();
+        if (v) u.voice = v;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+        lastAt = now; lastText = text;
+        Log.info('beestje spreekt', text);
+        return true;
+      } catch (e) {
+        if (!warned) { Log.warn('spraak afspelen mislukt', e.message); warned = true; }
+        return false;
+      }
+    }
+    function greet(part, kid, creature) {
+      if (!kid) return;
+      const key = part + '|' + kid + '|' + creature;
+      if (key === greetingKey) return;
+      greetingKey = key;
+      speak(part + ' ' + kid + '! Ik ben ' + creature + '. Zullen we tanden poetsen?');
+    }
+    function laugh() {
+      if (Date.now() - lastLaugh < 2200) return;
+      lastLaugh = Date.now();
+      speak('Hihihi, dat kriebelt!', { rate: 1.08, pitch: 1.55, volume: 0.74 });
+    }
+    function cancel() { if (supported()) window.speechSynthesis.cancel(); }
+    return { speak: speak, greet: greet, laugh: laugh, cancel: cancel, resetGreeting: function () { greetingKey = ''; } };
   })();
 
   function buzz(pattern) {
@@ -694,10 +766,16 @@
     let teeth = '';
     CHART.forEach(function (t) {
       const x = t.x - t.w / 2;
+      const gx = t.x - t.w / 5, gy = t.y + t.h * 0.6;
+      const germColor = t.k % 2 ? '#77B850' : '#A9BC4A';
       teeth += '<g class="mc-tooth" data-k="' + t.k + '">' +
         '<rect x="' + x + '" y="' + t.y + '" width="' + t.w + '" height="' + t.h + '" rx="9" fill="#FFFFFF" stroke="#E3ECF4" stroke-width="2"/>' +
         '<rect class="mc-dirt" x="' + x + '" y="' + t.y + '" width="' + t.w + '" height="' + t.h + '" rx="9" fill="#EBD27E" opacity=".75"/>' +
-        '<circle class="mc-spot" cx="' + (t.x - t.w / 4) + '" cy="' + (t.y + t.h * 0.62) + '" r="3.6" fill="#A9BC4A"/>' +
+        '<g class="mc-spot mc-germ" transform="translate(' + gx + ' ' + gy + ')">' +
+          '<path d="M-5-4 L-9-8 M5-4 L9-8 M-6 4 L-10 7 M6 4 L10 7" stroke="' + germColor + '" stroke-width="2" stroke-linecap="round"/>' +
+          '<circle r="7" fill="' + germColor + '"/><circle cx="-2.4" cy="-1.5" r="1.2" fill="#173C35"/><circle cx="2.4" cy="-1.5" r="1.2" fill="#173C35"/>' +
+          '<path d="M-2 2 Q0 4 2 2" fill="none" stroke="#173C35" stroke-width="1.2" stroke-linecap="round"/>' +
+        '</g>' +
         '<circle class="mc-spot" cx="' + (t.x + t.w / 5) + '" cy="' + (t.y + t.h * 0.34) + '" r="2.6" fill="#A9BC4A"/>' +
         '<g class="mc-shine">' + ART.sparkle(t.x + t.w / 2 - 4, t.y + (t.upper ? t.h - 6 : 6), 7, '#FFFFFF') + '</g>' +
         '</g>';
@@ -706,7 +784,7 @@
       return '<rect class="mc-hl" data-q="' + q + '" x="' + r[0] + '" y="' + r[1] + '" width="' + r[2] + '" height="' + r[3] + '" rx="16"/>';
     }).join('');
     return '<svg class="mc-svg" viewBox="0 0 320 180" role="img" aria-label="Tanden die je nu poetst">' +
-      '<rect x="6" y="6" width="308" height="168" rx="70" fill="#8E1F45"/>' +
+      '<rect x="6" y="6" width="308" height="168" rx="82" fill="#8E1F45"/>' +
       '<rect x="16" y="14" width="288" height="42" rx="21" fill="#FF9BB5"/><rect x="16" y="126" width="288" height="42" rx="21" fill="#FF9BB5"/>' +
       '<ellipse cx="160" cy="108" rx="100" ry="22" fill="#FF7A9C"/>' +
       hl + teeth +
@@ -857,6 +935,7 @@
     stage.classList.toggle('is-play', state === 'play');
     $('#home-greet').textContent = greeting(now) + (S.kidName ? ', ' + S.kidName : '') + '!';
     $('#home-name').textContent = state === 'egg' ? 'Een ' + sp.name.toLowerCase() + '-ei' : name;
+    if (S.hatched) Voice.greet(greeting(now), S.kidName, name);
     $('#home-scene').innerHTML = sceneSVG(S.outfit.achtergrond);
     $('#home-away').hidden = state !== 'away';
     $('#home-fx').innerHTML = '';
@@ -1047,7 +1126,7 @@
       setMood('giggle', 900);
       const p = local(e);
       if (t - lastFx > 260) { fx('text', p[0], p[1] - 20, pick(['hihi', 'haha', 'hihi!'])); lastFx = t; }
-      if (t - lastSound > 350) { Sound.giggle(); buzz(15); lastSound = t; }
+      if (t - lastSound > 350) { Sound.giggle(); Voice.laugh(); buzz(15); lastSound = t; }
       talk('Hihihi! Dat kriebelt!');
       logOnce('kietelen');
     }
@@ -1153,7 +1232,7 @@
   })();
 
   /* ---------- poetsen ---------- */
-  const B = { state: 'idle', duration: 120, elapsed: 0, base: 0, startAt: 0, raf: 0, quadrant: -1, tooth: -1, startedAt: null, timers: [], tipTimer: 0, foamTimer: 0, egg: false, spots: [], hls: [], shines: [], segs: [], teeth: [] };
+  const B = { state: 'idle', duration: 120, elapsed: 0, base: 0, startAt: 0, raf: 0, quadrant: -1, tooth: -1, encouraged: false, startedAt: null, timers: [], tipTimer: 0, foamTimer: 0, egg: false, spots: [], hls: [], shines: [], segs: [], teeth: [] };
 
   function clearBrushTimers() {
     B.timers.forEach(clearTimeout);
@@ -1169,7 +1248,7 @@
     Sound.unlock();
     Sound.tap();
     B.duration = Number(S.settings.duration) || 120;
-    B.elapsed = 0; B.base = 0; B.quadrant = -1; B.tooth = -1; B.startedAt = new Date();
+    B.elapsed = 0; B.base = 0; B.quadrant = -1; B.tooth = -1; B.encouraged = false; B.startedAt = new Date();
     B.state = 'countdown';
     B.egg = !S.hatched;
     show('brush');
@@ -1180,18 +1259,19 @@
     B.hls = $$('#brush-art [data-hl]');
     B.shines = $$('#brush-art [data-shine]');
     $('#brush-chart').innerHTML = chartSVG();
+    $('#brush-mode').textContent = S.settings.brushType === 'electric' ? 'Elektrische tandenborstel' : 'Handtandenborstel';
     B.teeth = $$('#brush-chart .mc-tooth').map(function (g) {
       return { dirt: $('.mc-dirt', g), spots: $$('.mc-spot', g), shine: $('.mc-shine', g), last: -1 };
     });
     $('#brush-bar').innerHTML = [0, 1, 2, 3].map(function () { return '<span class="seg"><i></i></span>'; }).join('');
     B.segs = $$('#brush-bar i');
     $('#brush-sheet').hidden = true;
-    $('#brush-tip').textContent = B.egg ? 'Poets goed, dan komt het ei uit!' : 'Zet je tandenborstel klaar…';
+    $('#brush-tip').textContent = B.egg ? 'Poets goed, dan komt het ei uit!' : (S.settings.brushType === 'electric' ? 'Zet je elektrische borstel klaar…' : 'Zet je tandenborstel klaar…');
     $('#scr-brush').classList.remove('is-brushing', 'is-paused');
     placeBrush(0, true);
     renderQuads();
     updateBrush();
-    Log.info('poetsen: aftellen', { duur: B.duration, deel: slotOf(B.startedAt).part, ei: B.egg });
+    Log.info('poetsen: aftellen', { duur: B.duration, borstel: S.settings.brushType, deel: slotOf(B.startedAt).part, ei: B.egg });
 
     const cd = $('#countdown'), num = $('#countdown-num');
     const steps = ['3', '2', '1', 'Poetsen!'];
@@ -1210,9 +1290,11 @@
       B.base = 0;
       $('#scr-brush').classList.add('is-brushing');
       Sound.go();
+      Sound.musicStart();
+      Voice.speak((S.kidName ? S.kidName + ', ' : '') + 'poetsen maar!');
       buzz(60);
       keepAwake(true);
-      Log.info('poetsen gestart', { duur: B.duration });
+      Log.info('poetsen gestart', { duur: B.duration, borstel: S.settings.brushType, stem: S.settings.voice, muziek: S.settings.music });
       nextTip();
       B.tipTimer = setInterval(nextTip, 9000);
       B.foamTimer = setInterval(foam, 650);
@@ -1222,8 +1304,12 @@
 
   let tipIndex = 0;
   function nextTip() {
-    tipIndex = (tipIndex + 1) % TIPS.length;
-    $('#brush-tip').textContent = TIPS[tipIndex];
+    const typed = S.settings.brushType === 'electric' ? ELECTRIC_TIPS : HAND_TIPS;
+    const tips = typed.concat(COMMON_TIPS);
+    const tip = tips[tipIndex % tips.length];
+    tipIndex = (tipIndex + 1) % tips.length;
+    $('#brush-tip').textContent = tip;
+    Voice.speak(tip);
   }
 
   function foam() {
@@ -1274,6 +1360,12 @@
     const q = Math.min(3, Math.floor(B.elapsed / qd));
     const k = Math.min(15, Math.floor(B.elapsed / td));
     $('#brush-timer').textContent = fmtTime(B.duration - B.elapsed);
+    if (!B.encouraged && B.state === 'running' && B.duration - B.elapsed <= 20) {
+      B.encouraged = true;
+      const msg = 'Bijna klaar' + (S.kidName ? ', ' + S.kidName : '') + '! Nog even volhouden!';
+      $('#brush-tip').textContent = msg;
+      Voice.speak(msg);
+    }
     // tanden op de mondkaart
     B.teeth.forEach(function (tt, i) {
       const d = 1 - clamp((B.elapsed - i * td) / td, 0, 1);
@@ -1321,6 +1413,8 @@
   function pauseBrush(reason, asking) {
     if (B.state === 'countdown') {
       clearBrushTimers();
+      Sound.musicStop();
+      Voice.cancel();
       B.state = 'idle';
       $('#countdown').hidden = true;
       Log.info('poetsen afgebroken tijdens aftellen', reason);
@@ -1331,6 +1425,8 @@
     B.base = B.elapsed;
     B.state = 'paused';
     clearBrushTimers();
+    Sound.musicStop();
+    Voice.cancel();
     keepAwake(false);
     $('#scr-brush').classList.remove('is-brushing');
     $('#scr-brush').classList.add('is-paused');
@@ -1354,11 +1450,15 @@
     Log.info('verder poetsen', { seconde: Math.round(B.base) });
     B.tipTimer = setInterval(nextTip, 9000);
     B.foamTimer = setInterval(foam, 650);
+    Sound.musicStart();
+    Voice.speak('Daar gaan we weer. Goed bezig!');
     loop();
   }
 
   function finishBrush(completed) {
     clearBrushTimers();
+    Sound.musicStop();
+    Voice.cancel();
     keepAwake(false);
     B.state = 'idle';
     $('#scr-brush').classList.remove('is-brushing', 'is-paused');
@@ -1396,6 +1496,7 @@
     const before = waiting.length;
     Store.save(S);
     Sound.done();
+    Voice.speak('Super gedaan' + (S.kidName ? ', ' + S.kidName : '') + '! Je tanden zijn schoon!');
     buzz([80, 60, 80]);
     Log.info('poetsbeurt klaar', { seconden: secs, deel: slot.part, cadeaus: S.giftQueue.length - before, eersteVanDagdeel: firstOfSlot });
     if (S.giftQueue.length) { show('reward'); confetti(); }
@@ -1580,10 +1681,13 @@
   function renderParent() {
     $('#in-creature').value = S.creatureName;
     $('#in-kid').value = S.kidName;
+    $$('input[name="brush-type"]').forEach(function (r) { r.checked = r.value === S.settings.brushType; });
     $$('input[name="duration"]').forEach(function (r) { r.checked = Number(r.value) === Number(S.settings.duration); });
     $$('input[name="play-evening"]').forEach(function (r) { r.checked = Number(r.value) === Number(S.settings.playEvening); });
     $$('input[name="play-morning"]').forEach(function (r) { r.checked = Number(r.value) === Number(S.settings.playMorning); });
     $('#in-sound').checked = !!S.settings.sound;
+    $('#in-voice').checked = !!S.settings.voice;
+    $('#in-music').checked = !!S.settings.music;
     $('#in-vibrate').checked = !!S.settings.vibrate;
     const sp = S.species ? speciesById(S.species) : null;
     $('#parent-species').textContent = sp ? (sp.name + (S.hatched ? ' · ' + S.creatureName : ' · nog in het ei')) : 'Nog geen ei gekozen';
@@ -1718,7 +1822,12 @@
       S.creatureName = v; e.target.value = v; Store.save(S); Log.info('naam beestje gewijzigd', v);
     });
     $('#in-kid').addEventListener('change', function (e) {
-      S.kidName = e.target.value.trim().slice(0, 18); Store.save(S); Log.info('naam kind gewijzigd');
+      S.kidName = e.target.value.trim().slice(0, 18); Voice.resetGreeting(); Store.save(S); Log.info('naam kind gewijzigd', S.kidName || '(leeg)');
+    });
+    $$('input[name="brush-type"]').forEach(function (r) {
+      r.addEventListener('change', function () {
+        S.settings.brushType = r.value; Store.save(S); Log.info('tandenborstel ingesteld', r.value);
+      });
     });
     [['duration', 'duration', 'poetstijd'], ['play-evening', 'playEvening', 'speeltijd avond'], ['play-morning', 'playMorning', 'speeltijd ochtend']].forEach(function (c) {
       $$('input[name="' + c[0] + '"]').forEach(function (r) {
@@ -1727,7 +1836,9 @@
         });
       });
     });
-    $('#in-sound').addEventListener('change', function (e) { S.settings.sound = e.target.checked; Store.save(S); Log.info('geluid', S.settings.sound ? 'aan' : 'uit'); });
+    $('#in-sound').addEventListener('change', function (e) { S.settings.sound = e.target.checked; if (!S.settings.sound) Sound.musicStop(); Store.save(S); Log.info('geluid', S.settings.sound ? 'aan' : 'uit'); });
+    $('#in-voice').addEventListener('change', function (e) { S.settings.voice = e.target.checked; if (!S.settings.voice) Voice.cancel(); else Voice.resetGreeting(); Store.save(S); Log.info('stem', S.settings.voice ? 'aan' : 'uit'); });
+    $('#in-music').addEventListener('change', function (e) { S.settings.music = e.target.checked; if (!S.settings.music) Sound.musicStop(); Store.save(S); Log.info('muziek', S.settings.music ? 'aan' : 'uit'); });
     $('#in-vibrate').addEventListener('change', function (e) { S.settings.vibrate = e.target.checked; Store.save(S); Log.info('trillen', S.settings.vibrate ? 'aan' : 'uit'); });
     on('#btn-parent-gift', function () {
       S.giftQueue.push({ min: 'gewoon', reason: 'ouders' });
@@ -1838,7 +1949,8 @@
       'Opslag: ' + (Log.storageOk() ? 'werkt' : 'GEBLOKKEERD (spel wordt niet bewaard)'),
       'Spel bij start: dier ' + (S.species || 'nog geen') + (S.species && !S.hatched ? ' (in ei)' : '') + ', status ' + lifeState() + ', ' +
         S.owned.length + '/' + ITEMS.length + ' spullen, ' + completedSessions().length + ' beurten, reeks ' + streak() +
-        ', ' + S.giftQueue.length + ' cadeau(s) klaar, poetstijd ' + S.settings.duration + 's, speeltijd ' + S.settings.playEvening + 's/' + S.settings.playMorning + 's'
+        ', ' + S.giftQueue.length + ' cadeau(s) klaar, ' + S.settings.brushType + '-borstel, poetstijd ' + S.settings.duration + 's, stem ' + (S.settings.voice ? 'aan' : 'uit') +
+        ', muziek ' + (S.settings.music ? 'aan' : 'uit') + ', speeltijd ' + S.settings.playEvening + 's/' + S.settings.playMorning + 's'
     ]);
     Log.info('app gestart', { versie: VERSION });
     bind();

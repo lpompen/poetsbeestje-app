@@ -277,7 +277,7 @@ button { font: inherit; color: inherit; }
 .stage-scene svg, .stage-art svg { width: 100%; height: 100%; display: block; }
 .stage-art { padding: 6% 4% 2%; }
 .stage--compact { flex: 0 0 auto; height: min(34vh, 280px); min-height: 180px; }
-.stage--brush { min-height: 200px; }
+.stage--brush { min-height: 130px; max-height: 23vh; }
 .stage--brush .stage-art { padding: 2%; }
 
 .say {
@@ -922,26 +922,26 @@ button { font: inherit; color: inherit; }
 .field-label { margin: 2px 0 -4px; font-weight: 800; font-size: 0.9rem; color: var(--ink-soft); }
 
 /* ---------- poetsen: mondkaart ---------- */
-.stage--brush { min-height: 150px; }
 .chart {
   flex: none;
   background: var(--card);
-  border-radius: var(--r-lg);
-  padding: 8px 10px 10px;
+  border-radius: 44% / 30%;
+  padding: 10px 14px 12px;
   display: grid;
   gap: 6px;
-  box-shadow: 0 4px 0 var(--shade);
+  box-shadow: 0 6px 0 var(--shade), inset 0 0 0 3px color-mix(in srgb, var(--bubble-a) 65%, transparent);
 }
 .chart-label { margin: 0; text-align: center; font-family: var(--font-display); font-size: 1.35rem; line-height: 1.1; color: var(--ink); }
 .chart-now { color: var(--ink-soft); font-weight: 600; }
 .chart-label b { font-weight: 800; color: var(--berry); }
 .chart .seg { background: var(--line); }
-.chart-art { width: 100%; max-width: 360px; margin: 0 auto; aspect-ratio: 320 / 180; max-height: 22vh; }
+.chart-art { width: 100%; max-width: 440px; margin: 0 auto; aspect-ratio: 320 / 180; max-height: 31vh; }
 .chart-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .mc-hl { fill: none; stroke: var(--sun); stroke-width: 4; stroke-dasharray: 10 7; opacity: 0; }
 .mc-hl.on { opacity: 1; animation: march 0.8s linear infinite; }
 .mc-shine { opacity: 0; transform-box: fill-box; transform-origin: center; }
 .mc-shine.on { opacity: 1; animation: twinkle 1.2s ease-in-out infinite; }
+.mc-germ { transform-box: fill-box; transform-origin: center; animation: germ-wiggle 0.75s ease-in-out infinite alternate; }
 .mc-brush, .pb-minibrush { transform-box: view-box; transform-origin: 0 0; }
 .mc-brush { transition: transform 0.45s cubic-bezier(.4, 1.3, .6, 1); }
 .pb-minibrush { transition: transform 0.45s ease; }
@@ -952,10 +952,13 @@ button { font: inherit; color: inherit; }
 .screen--brush:not(.is-brushing) .bg-foam { opacity: 0.4; }
 
 @media (max-height: 700px) {
-  .chart-art { max-height: 18vh; }
+  .stage--brush { min-height: 90px; max-height: 16vh; }
+  .chart-art { max-height: 25vh; }
   .chart-label { font-size: 1.15rem; }
   .egg-pick-name { font-size: 0.8rem; }
 }
+
+@keyframes germ-wiggle { from { rotate: -8deg; scale: .94; } to { rotate: 8deg; scale: 1.06; } }
 
 @keyframes egg-wobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-4deg); } 75% { transform: rotate(4deg); } }
 @keyframes egg-shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 50% { transform: rotate(8deg); } 75% { transform: rotate(-5deg); } }

@@ -50,8 +50,9 @@ let serverOut = '';
 server.stdout.on('data', (d) => { serverOut += d; });
 server.stderr.on('data', (d) => { serverOut += d; });
 let up = false;
-for (let i = 0; i < 50 && !up; i++) {
-  try { const r = await fetch(BASE + 'api/health'); up = r.ok; } catch { await new Promise((r) => setTimeout(r, 100)); }
+for (let i = 0; i < 120 && !up; i++) {
+  try { const r = await fetch(BASE + 'api/health'); up = r.ok; } catch { /* server start nog */ }
+  if (!up) await new Promise((r) => setTimeout(r, 100));
 }
 check('server start en /api/health antwoordt', up, up ? BASE : serverOut.trim());
 
@@ -65,6 +66,15 @@ try {
     locale: 'nl-NL', timezoneId: 'Europe/Amsterdam'
   });
   const page = await ctx.newPage();
+  await page.addInitScript(() => {
+    window.__spoken = [];
+    class TestUtterance {
+      constructor(text) { this.text = text; this.lang = ''; this.rate = 1; this.pitch = 1; this.volume = 1; }
+    }
+    const synth = { getVoices: () => [{ lang: 'nl-NL', name: 'Test Nederlands' }], cancel: () => {}, speak: (u) => window.__spoken.push(u.text) };
+    try { Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: TestUtterance }); } catch { window.SpeechSynthesisUtterance = TestUtterance; }
+    try { Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: synth }); } catch { window.speechSynthesis = synth; }
+  });
   page.on('pageerror', (e) => pageErrors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error') consoleErrors.push(m.text()); });
   const shot = async (name) => { await page.screenshot({ path: join(OUT, name + '.png') }); log(`     screenshot ${name}.png`); };
@@ -114,6 +124,8 @@ try {
   await tick(3500);
   check('poetsen loopt', (await page.getAttribute('#scr-brush', 'class')).includes('is-brushing'));
   check('mondkaart met 16 tanden', (await page.$$eval('#brush-chart .mc-tooth', (e) => e.length)) === 16);
+  check('bacillenmannetjes staan op de tanden', (await page.$$eval('#brush-chart .mc-germ', (e) => e.length)) === 16);
+  check('mondkaart heeft een ronde fotovorm', (await page.$eval('.chart', (e) => getComputedStyle(e).borderRadius)) !== '0px');
   const brushPos1 = await page.$eval('#mc-brush', (e) => e.style.transform);
   await tick(16000);
   const brushPos2 = await page.$eval('#mc-brush', (e) => e.style.transform);
@@ -258,12 +270,20 @@ try {
   check('log zonder fouten', /0 fout\(en\)/.test(logText), logText.split('\n').filter((l) => /Samenvatting/.test(l))[0]);
   await page.check('#pe-120');
   await page.check('#pm-60');
+  check('keuze voor hand- of elektrische borstel aanwezig', await visible('#brush-hand') && await visible('#brush-electric'));
+  check('1½ minuut is beschikbaar maar niet de standaard', await visible('#dur-90') && (await page.isChecked('#dur-120')));
+  await page.check('#brush-electric');
+  await page.check('#dur-90');
   await page.check('#dur-60');
+  check('stem en muziek staan standaard aan', await page.isChecked('#in-voice') && await page.isChecked('#in-music'));
+  await page.fill('#in-kid', 'Mila');
+  await page.press('#in-kid', 'Tab');
   s = await state();
-  check('speeltijd en poetstijd ingesteld', s.settings.playEvening === 120 && s.settings.playMorning === 60 && s.settings.duration === 60, JSON.stringify(s.settings));
+  check('borstel, speeltijd en poetstijd ingesteld', s.settings.brushType === 'electric' && s.settings.playEvening === 120 && s.settings.playMorning === 60 && s.settings.duration === 60, JSON.stringify(s.settings));
   await page.click('#btn-parent-gift');
   await shot('15-ouders');
   await page.click('#btn-parent-back');
+  check('beestje begroet kind hoorbaar bij naam', await page.evaluate(() => window.__spoken.some((t) => /Mila/.test(t))), JSON.stringify(await page.evaluate(() => window.__spoken.slice(-5))));
   check('cadeau van ouders wacht tot na het poetsen', !(await visible('#btn-pending')));
 
   // ---------- maandagavond: stoppen halverwege, dan echt poetsen ----------

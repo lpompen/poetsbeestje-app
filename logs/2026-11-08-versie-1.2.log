@@ -1,0 +1,103 @@
+POETSBEESTJE — LOG VAN DE LAATSTE TEST
+Gedraaid 8-11-2026, 07:24:59 · Node v24.19.0
+----
++  0.3s OK   server start en /api/health antwoordt — http://localhost:3917/
++  0.7s OK   nieuw spel begint met ei kiezen
++  0.7s OK   zes eieren, waaronder eenhoorn, dino en pluisbol — eenhoorn,dino,pluis,poes,konijn,monster
++  0.7s OK   knop is uit tot je een ei kiest
++  2.5s      screenshot 01-ei-kiezen.png
++  2.5s OK   eenhoorn-ei gekozen, naam Sterretje
++  2.5s OK   beginscherm toont het ei in een nest
++  2.5s OK   status is "egg"
++  2.5s OK   kledingkast zit op slot vóór het uitkomen — Eerst moet ik uit het ei komen!
++  2.6s      screenshot 02-ei-in-nest.png
++  2.7s OK   poetsen loopt
++  2.7s OK   mondkaart met 16 tanden
++  2.7s OK   bacillenmannetjes staan op de tanden
++  2.7s OK   mondkaart heeft een ronde fotovorm
++  2.7s OK   borstel schuift van tand naar tand — translate(46px, 61px) scale(-1, 1) → translate(112px, 64px) scale(-1, 1)
++  2.7s OK   eerste tand is schoon, onderste nog vies — 0 / 0.75
++  2.7s OK   eerste tand glinstert
++  2.7s OK   label zegt boven links
++  2.7s OK   na 41 s: boven rechts
++  2.7s OK   ei krijgt barstjes tijdens het poetsen — 1
++  2.8s      screenshot 03-poetsen-tanden.png
++  2.8s OK   na 2 minuten: cadeauscherm
++  2.8s OK   eerst uitkomen, dan een cadeautje — [{"reason":"hatch"},{"min":"gewoon","reason":"poetsbeurt"}]
++  2.8s OK   ei ligt klaar om op te tikken
++  2.8s OK   ei is uitgekomen
++  2.8s OK   titel noemt de eenhoorn — Het is een eenhoorn!
++  2.8s OK   knop "Hoi Sterretje!"
++  3.9s      screenshot 04-uitgekomen.png
++  4.0s OK   eerste avondcadeau is de sterrenpyjama — Sterrenpyjama
++  4.8s      screenshot 05-pyjama-cadeau.png
++  4.9s OK   pyjama meteen aangetrokken
++  4.9s OK   status is nu "play"
++  4.9s OK   speeltijd-teller zichtbaar — 1:00
++  4.9s OK   hulpje voor aaien zichtbaar
++  4.9s OK   poetsknop weg tijdens spelen
++  4.9s OK   tekstballon begroet — Hoi! Ik ben Sterretje!
++  5.2s      screenshot 06-spelen-pyjama.png
++  5.5s OK   heen en weer kriebelen = kietelen
++  5.8s      screenshot 07-kietelen.png
++  5.9s OK   omlaag aaien = knuffelen
++  6.0s OK   hartjes verschijnen
++  6.2s      screenshot 08-knuffelen.png
++  6.5s OK   twee keer omhoog aaien = boos — Hé! Niet tegen mijn haren in!
++  6.8s      screenshot 09-boos.png
++  6.8s OK   na een paar seconden weer blij
++  6.8s OK   kledingkast open tijdens spelen
++  6.9s OK   vak kleding met pyjama's — kl-sterren,kl-wolkjes,kl-streepjes,kl-tuinbroek,kl-tutu,kl-dino,kl-trui,kl-ruimtepak
++  6.9s OK   speeltijd ook in de kledingkast — 0:50
++  7.1s      screenshot 10-kledingkast-kleding.png
++  7.2s OK   na de speeltijd terug naar huis
++  7.2s OK   beestje gaapt — Gaaaap... ik word zo moe.
++  7.4s      screenshot 11-gapen.png
++  7.4s OK   status is nu "sleep"
++  7.4s OK   nachtlucht op het podium
++  7.4s OK   Zzz boven het hoofd
++  7.4s OK   kledingkast op slot tijdens slapen — morgen weer
++  7.7s      screenshot 12-slapen.png
++  7.8s OK   zondagochtend: eerst poetsen — Goedemorgen! Eerst poetsen, dan spelen.
++  8.0s OK   ochtendbeurt geeft cadeautje
++  8.1s OK   weekend: 1 minuut spelen — 1:00
++  8.1s OK   weekend: gaat buiten spelen — Ik ga buiten spelen! Doei!
++  8.1s OK   status is "away" — Sterretje is buiten aan het spelen. Tot straks!
++  8.4s OK   schooldag: 30 seconden spelen — 0:30
++  8.4s OK   zegt dat hij naar school moet — Oh! Ik moet naar school. Doei!
++  8.7s      screenshot 13-naar-school.png
++  8.7s OK   op school: kaartje op het podium — Sterretje is naar school. Tot vanmiddag!
++  8.9s      screenshot 14-op-school.png
++  9.3s OK   fout antwoord: geen ouderscherm
++  9.6s OK   goed antwoord: ouderscherm
++  9.6s OK   dier staat in het ouderscherm — Eenhoorn · Sterretje
++  9.7s OK   log bevat speeltijd en aaien
++  9.7s OK   log zonder fouten — Samenvatting: 0 fout(en), 1 waarschuwing(en), 27 meldingen
++  9.8s OK   keuze voor hand- of elektrische borstel aanwezig
++  9.8s OK   1½ minuut is beschikbaar maar niet de standaard
++  9.9s OK   stem en muziek staan standaard aan
++ 10.0s OK   borstel, speeltijd en poetstijd ingesteld — {"duration":60,"brushType":"electric","sound":true,"voice":true,"music":true,"vibrate":true,"playEvening":120,"playMorning":60}
++ 10.2s      screenshot 15-ouders.png
++ 10.2s OK   beestje begroet kind hoorbaar bij naam — ["Maak kleine rondjes!","Zet de borstel schuin langs het tandvlees.","Bijna klaar! Nog even volhouden!","Super gedaan! Je tanden zijn schoon!","Goedemorgen Mila! Ik ben Sterretje. Zullen we tanden poetsen?"]
++ 10.2s OK   cadeau van ouders wacht tot na het poetsen
++ 10.5s OK   stopvraag verschijnt
++ 10.8s OK   gestopte beurt telt niet
++ 10.9s OK   volle beurt: eerst poets-cadeau, dan dat van ouders — [{"min":"gewoon","reason":"poetsbeurt"},{"min":"gewoon","reason":"ouders"}]
++ 11.0s OK   ouder-cadeau via de gele knop
++ 11.0s OK   cadeau van ouders
++ 11.4s OK   reeks van 3 dagen geeft extra cadeau — [{"min":"gewoon","reason":"poetsbeurt"},{"min":"zeldzaam","reason":"reeks","days":3}] @ Tue Nov 03 2026 18:40
++ 11.5s OK   bonus-titel — Bonus! 3 dagen op rij
++ 11.6s OK   bonus is minstens zeldzaam — Zeldzaam
++ 12.1s OK   ander ei kiezen opent de eieren
++ 12.2s OK   dino-ei, spullen bewaard — 10 spullen
++ 12.5s      screenshot 16-donker.png
++ 12.5s OK   donker thema actief — rgb(6, 38, 58)
++ 12.6s OK   geen horizontale scroll op 360 px
++ 12.6s OK   knoppen passen op klein scherm (640 px) — 620px
++ 12.7s OK   mondkaart past op klein scherm — 441px
++ 12.9s      screenshot 17-klein-poetsen.png
++ 15.1s OK   geen JavaScript-fouten op de pagina
++ 15.1s OK   geen foutmeldingen in de console
++ 15.1s OK   server schreef log van de laatste app-run naar logs/last-run.log
+----
+Resultaat: ALLES OK

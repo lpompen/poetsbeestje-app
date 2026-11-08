@@ -1,6 +1,6 @@
 {
   "name": "poetsbeestje-app",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Poets-app voor kinderen: twee minuten poetsen met je eigen beestje en na elke beurt nieuwe spullen om het aan te kleden.",
   "main": "server.js",

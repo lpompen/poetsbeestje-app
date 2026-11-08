@@ -104,7 +104,7 @@
     </div>
 
     <div class="chart">
-      <p class="chart-label"><span class="chart-now">Nu:</span> <b id="mc-label">Boven links</b></p>
+      <p class="chart-label"><span class="chart-now" id="brush-mode">Handtandenborstel</span> · <span class="chart-now">Nu:</span> <b id="mc-label">Boven links</b></p>
       <div class="chart-art" id="brush-chart"></div>
       <div class="bar" id="brush-bar" aria-hidden="true"></div>
     </div>
@@ -216,10 +216,20 @@
       </div>
 
       <div class="panel">
+        <h3>Tandenborstel</h3>
+        <p class="muted">Kies de borstel voor passende poetstips. Ook met een elektrische tandenborstel blijft 2 minuten de aanbevolen standaard; 1½ minuut is wel als handmatige keuze beschikbaar.</p>
+        <div class="segmented" role="radiogroup" aria-label="Soort tandenborstel">
+          <label><input type="radio" name="brush-type" id="brush-hand" value="hand"><span>Hand</span></label>
+          <label><input type="radio" name="brush-type" id="brush-electric" value="electric"><span>Elektrisch</span></label>
+        </div>
+      </div>
+
+      <div class="panel">
         <h3>Poetstijd</h3>
-        <p class="muted">Tandartsen raden twee minuten aan. De tijd wordt in vier stukken verdeeld: boven links, boven rechts, onder rechts, onder links.</p>
+        <p class="muted">De standaard is twee minuten. De tijd wordt in vier stukken verdeeld: boven links, boven rechts, onder rechts, onder links.</p>
         <div class="segmented" role="radiogroup" aria-label="Poetstijd">
           <label><input type="radio" name="duration" id="dur-60" value="60"><span>1 minuut</span></label>
+          <label><input type="radio" name="duration" id="dur-90" value="90"><span>1½ minuut</span></label>
           <label><input type="radio" name="duration" id="dur-120" value="120"><span>2 minuten</span></label>
           <label><input type="radio" name="duration" id="dur-180" value="180"><span>3 minuten</span></label>
         </div>
@@ -243,8 +253,10 @@
       </div>
 
       <div class="panel">
-        <h3>Geluid en trillen</h3>
+        <h3>Stem, muziek en trillen</h3>
         <label class="switch" for="in-sound"><input type="checkbox" id="in-sound"><span class="track"></span><span>Geluidjes bij wisselen en klaar</span></label>
+        <label class="switch" for="in-voice"><input type="checkbox" id="in-voice"><span class="track"></span><span>Schattig stemmetje voor begroetingen en poetstips</span></label>
+        <label class="switch" for="in-music"><input type="checkbox" id="in-music"><span class="track"></span><span>Rustig deuntje tijdens het poetsen</span></label>
         <label class="switch" for="in-vibrate"><input type="checkbox" id="in-vibrate"><span class="track"></span><span>Trillen bij wisselen (als je telefoon dat kan)</span></label>
       </div>
 
